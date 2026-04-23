@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pacmann · Factor Investing — Momentum40</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #EFF2F6;
+  --bg2:     #E4E9F1;
+  --bg3:     #D5DCE9;
+  --panel:   #FFFFFF;
+  --panel2:  #F4F6FA;
+  --border:  rgba(22,42,74,0.09);
+  --border2: rgba(22,42,74,0.16);
+  --border3: rgba(22,42,74,0.28);
+  --text:    #162A4A;
+  --text2:   #3A5272;
+  --text3:   #7A96B4;
+  --accent:  #0B6E6E;
+  --a2:      rgba(11,110,110,0.07);
+  --a3:      rgba(11,110,110,0.14);
+  --a4:      rgba(11,110,110,0.28);
+  --green:   #177A50;
+  --green2:  rgba(23,122,80,0.10);
+  --red:     #BE3232;
+  --red2:    rgba(190,50,50,0.09);
+  --amber:   #A0600A;
+  --blue:    #1A4A9A;
+  --blue2:   rgba(26,74,154,0.08);
+  --chart-green: #0B9E6E;
+  --chart-blue:  #2563EB;
+  --chart-red:   #DC2626;
+  --chart-amber: #D97706;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+
+body{
+  font-family:'Space Grotesk',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:13px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(22,42,74,.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(22,42,74,.022) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+
+/* ── CHROME BAR ── */
+.chrome-bar{
+  background:var(--text);height:26px;
+  display:flex;align-items:center;padding:0 18px;gap:12px;
+  position:sticky;top:0;z-index:200;
+}
+.cdots{display:flex;gap:5px;}
+.cd{width:10px;height:10px;border-radius:50%;}
+.cd-r{background:#FF5F56;}.cd-y{background:#FFBD2E;}.cd-g{background:#27C93F;}
+.chrome-title{
+  font-family:'Space Mono',monospace;
+  font-size:10px;color:rgba(255,255,255,.36);letter-spacing:.07em;
+  flex:1;text-align:center;
+}
+
+/* ── TOP NAV ── */
+.topnav{
+  height:44px;background:var(--panel);
+  border-bottom:2px solid var(--border3);
+  display:flex;align-items:stretch;
+  position:sticky;top:26px;z-index:199;
+}
+.tn-brand{
+  display:flex;align-items:center;padding:0 20px;
+  border-right:1px solid var(--border2);cursor:pointer;gap:10px;
+  flex-shrink:0;
+}
+.tn-logo{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--text);}
+.tn-logo span{color:var(--accent);}
+.tn-links{display:flex;}
+.tn-links a{
+  font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);
+  text-decoration:none;padding:0 16px;display:flex;align-items:center;
+  border-right:1px solid var(--border);letter-spacing:.04em;
+  cursor:pointer;transition:color .12s,background .12s;white-space:nowrap;
+}
+.tn-links a:hover{color:var(--accent);background:var(--a2);}
+.tn-links a.active{color:var(--accent);background:var(--a2);border-bottom:2px solid var(--accent);}
+.tn-right{
+  display:flex;align-items:center;padding:0 18px;gap:12px;
+  border-left:1px solid var(--border2);margin-left:auto;flex-shrink:0;
+}
+.live-ind{display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
+.btn-sm{
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
+  color:var(--panel);background:var(--accent);border:none;
+  padding:6px 14px;cursor:pointer;letter-spacing:.04em;
+  transition:background .15s;
+}
+.btn-sm:hover{background:#0A8A8A;}
+.btn-sm-outline{
+  font-family:'Space Mono',monospace;font-size:10px;
+  color:var(--text2);background:transparent;border:1px solid var(--border3);
+  padding:5px 13px;cursor:pointer;letter-spacing:.04em;transition:all .15s;
+}
+.btn-sm-outline:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ── SUB-NAV (breadcrumb + tabs) ── */
+.subnav{
+  background:var(--panel2);border-bottom:1px solid var(--border2);
+  padding:0 24px;display:flex;align-items:center;justify-content:space-between;
+  height:38px;
+}
+.breadcrumb{
+  font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);
+  display:flex;align-items:center;gap:6px;letter-spacing:.04em;
+}
+.breadcrumb a{color:var(--text3);text-decoration:none;cursor:pointer;}
+.breadcrumb a:hover{color:var(--accent);}
+.breadcrumb span{color:var(--border3);}
+.bc-cur{color:var(--text2);font-weight:700;}
+.subnav-tabs{display:flex;gap:0;}
+.subnav-tab{
+  font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);
+  padding:0 16px;height:38px;display:flex;align-items:center;
+  border-left:1px solid var(--border);cursor:pointer;letter-spacing:.04em;
+  transition:color .12s,background .12s;
+}
+.subnav-tab:first-child{border-left:none;}
+.subnav-tab:hover{color:var(--accent);background:var(--a2);}
+.subnav-tab.active{color:var(--accent);border-bottom:2px solid var(--accent);}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 110px);position:relative;z-index:1;}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  background:var(--panel);border-right:1px solid var(--border2);
+  padding:0;display:flex;flex-direction:column;
+  position:sticky;top:110px;height:calc(100vh - 110px);overflow-y:auto;
+}
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-track{background:transparent;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px;}
+
+.sb-section{border-bottom:1px solid var(--border);}
+.sb-hd{
+  font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:10px 16px 8px;
+  display:flex;align-items:center;gap:6px;
+}
+.sb-hd::before{content:'▸';color:var(--accent);font-size:8px;}
+
+/* portfolio identity */
+.sb-identity{padding:16px;}
+.sb-portfolio-name{
+  font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;
+  color:var(--text);letter-spacing:-.5px;margin-bottom:4px;
+}
+.sb-portfolio-sub{font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:.06em;margin-bottom:12px;}
+.sb-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;}
+.sb-tag{
+  font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.08em;
+  text-transform:uppercase;padding:2px 6px;border:1px solid;
+}
+.sb-tag-accent{color:var(--accent);border-color:var(--a4);background:var(--a2);}
+.sb-tag-dim{color:var(--text3);border-color:var(--border2);background:var(--panel2);}
+.sb-tag-blue{color:var(--blue);border-color:rgba(26,74,154,.2);background:var(--blue2);}
+
+/* config rows */
+.sb-config{padding:10px 16px;}
+.sb-cfg-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:7px 0;border-bottom:1px solid var(--border);
+}
+.sb-cfg-row:last-child{border-bottom:none;}
+.sb-cfg-k{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.04em;}
+.sb-cfg-v{font-family:'Space Mono',monospace;font-size:10px;color:var(--text);font-weight:700;}
+.sb-cfg-v.green{color:var(--green);}
+
+/* factor list */
+.sb-factors{padding:10px 16px;}
+.factor-row{
+  display:flex;align-items:center;gap:8px;padding:6px 0;
+  border-bottom:1px solid var(--border);
+}
+.factor-row:last-child{border-bottom:none;}
+.factor-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.factor-name{font-size:12px;color:var(--text2);flex:1;}
+.factor-ic{
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
+  color:var(--green);
+}
+
+/* variants */
+.sb-variants{padding:10px 16px;}
+.variant-card{
+  border:1px solid var(--border2);padding:10px 12px;
+  margin-bottom:6px;cursor:pointer;transition:border-color .15s,background .15s;
+}
+.variant-card:last-child{margin-bottom:0;}
+.variant-card:hover{border-color:var(--accent);background:var(--a2);}
+.variant-card.active{border-color:var(--accent);background:var(--a2);}
+.vc-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.vc-meta{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);}
+
+/* ── MAIN CONTENT ── */
+.main{padding:20px 24px;display:flex;flex-direction:column;gap:16px;}
+
+/* ── PANEL COMPONENT ── */
+.panel{background:var(--panel);border:1px solid var(--border2);}
+.ph{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:7px 14px;border-bottom:1px solid var(--border);
+  background:var(--panel2);
+}
+.ph-ttl{
+  font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);
+  letter-spacing:.12em;text-transform:uppercase;
+  display:flex;align-items:center;gap:6px;
+}
+.ph-ttl::before{content:'▸';color:var(--accent);font-size:8px;}
+.ph-meta{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);}
+.ph-meta.green{color:var(--green);}
+.ph-meta.red{color:var(--red);}
+.pb{padding:16px;}
+
+/* ── METRICS ROW ── */
+.metrics-row{display:grid;grid-template-columns:repeat(9,1fr);gap:0;background:var(--border2);}
+.metric-cell{
+  background:var(--panel);padding:14px 16px;
+  border-right:1px solid var(--border2);
+  transition:background .15s;
+}
+.metric-cell:last-child{border-right:none;}
+.metric-cell:hover{background:var(--a2);}
+.mc-label{font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+.mc-val{font-family:'Space Mono',monospace;font-size:17px;font-weight:700;color:var(--text);letter-spacing:-.5px;line-height:1;}
+.mc-val.green{color:var(--green);}
+.mc-val.red{color:var(--red);}
+.mc-val.amber{color:var(--amber);}
+.mc-diff{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);margin-top:4px;}
+.mc-diff.green{color:var(--green);}
+.mc-diff.red{color:var(--red);}
+
+/* ── CHART AREA ── */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--border2);}
+.chart-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:var(--border2);}
+
+.chart-box{background:var(--panel);padding:0;}
+.chart-canvas{
+  width:100%;height:180px;position:relative;overflow:hidden;
+  background:var(--panel);padding:14px 16px 8px;
+}
+.chart-label-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0 16px 10px;
+}
+.chart-label-k{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;}
+.chart-label-v{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;}
+.chart-label-v.green{color:var(--green);}
+.chart-label-v.red{color:var(--red);}
+
+/* SVG charts */
+svg.chart{width:100%;height:100%;overflow:visible;}
+.chart-line{fill:none;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;}
+.chart-fill{opacity:.08;}
+.chart-grid-line{stroke:var(--border);stroke-width:1;}
+.chart-zero{stroke:var(--border3);stroke-width:1;stroke-dasharray:3,3;}
+.chart-axis-label{font-family:'Space Mono',monospace;font-size:8px;fill:var(--text3);}
+
+/* ── WEIGHTS TABLE ── */
+.weights-table{width:100%;border-collapse:collapse;}
+.weights-table thead th{
+  font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);
+  letter-spacing:.1em;text-transform:uppercase;text-align:left;
+  padding:8px 14px;border-bottom:1px solid var(--border2);
+  background:var(--panel2);font-weight:400;white-space:nowrap;
+}
+.weights-table thead th.right{text-align:right;}
+.weights-table tbody td{
+  font-family:'Space Mono',monospace;font-size:11px;color:var(--text2);
+  padding:8px 14px;border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+.weights-table tbody td.sym{color:var(--text);font-weight:700;}
+.weights-table tbody td.right{text-align:right;}
+.weights-table tbody td.green{color:var(--green);font-weight:700;}
+.weights-table tbody td.red{color:var(--red);font-weight:700;}
+.weights-table tbody tr:last-child td{border-bottom:none;}
+.weights-table tbody tr:hover td{background:var(--a2);}
+
+.weight-bar-wrap{display:flex;align-items:center;gap:8px;}
+.weight-bar-bg{flex:1;height:4px;background:var(--bg3);position:relative;max-width:80px;}
+.weight-bar-fill{position:absolute;top:0;left:0;height:4px;background:var(--accent);}
+.weight-bar-fill.neg{background:var(--red);right:0;left:auto;}
+
+/* position badge */
+.pos-badge{
+  font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.06em;
+  text-transform:uppercase;padding:2px 6px;display:inline-block;
+}
+.pos-long{color:var(--green);background:var(--green2);border:1px solid rgba(23,122,80,.2);}
+.pos-short{color:var(--red);background:var(--red2);border:1px solid rgba(190,50,50,.2);}
+.pos-flat{color:var(--text3);background:var(--panel2);border:1px solid var(--border2);}
+
+/* ── FACTOR SCORE GRID ── */
+.factor-score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:var(--border);}
+.fs-cell{background:var(--panel);padding:14px 16px;}
+.fs-name{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}
+.fs-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.fs-ticker{font-family:'Space Mono',monospace;font-size:10px;color:var(--text);font-weight:700;width:36px;flex-shrink:0;}
+.fs-bar-bg{flex:1;height:5px;background:var(--bg3);border-radius:1px;overflow:hidden;}
+.fs-bar-fill{height:5px;border-radius:1px;}
+.fs-score{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;width:32px;text-align:right;flex-shrink:0;}
+
+/* ── STATS SIDE PANEL ── */
+.stats-side{display:grid;grid-template-columns:1fr 300px;gap:0;background:var(--border2);}
+
+/* ── DESCRIPTION PANEL ── */
+.desc-text{font-size:13px;color:var(--text2);line-height:1.72;margin-bottom:14px;}
+.desc-ul{list-style:none;display:flex;flex-direction:column;gap:0;}
+.desc-ul li{
+  font-size:12px;color:var(--text2);padding:6px 0;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.desc-ul li:last-child{border-bottom:none;}
+.desc-ul li::before{font-family:'Space Mono',monospace;content:'>_';color:var(--accent);font-size:10px;flex-shrink:0;}
+
+/* ── PROPERTIES TABLE ── */
+.props-table{width:100%;border-collapse:collapse;}
+.props-table td{
+  font-size:12px;padding:8px 14px;border-bottom:1px solid var(--border);
+  vertical-align:top;
+}
+.props-table tr:last-child td{border-bottom:none;}
+.props-table td:first-child{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.04em;width:140px;}
+.props-table td:last-child{color:var(--text2);}
+.props-table td:last-child strong{color:var(--text);font-weight:600;}
+
+/* ── PERFORMANCE COMPARISON TABLE ── */
+.perf-table{width:100%;border-collapse:collapse;}
+.perf-table th{
+  font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);
+  letter-spacing:.1em;text-transform:uppercase;text-align:left;
+  padding:8px 14px;border-bottom:1px solid var(--border2);
+  background:var(--panel2);font-weight:400;
+}
+.perf-table th.hl{color:var(--accent);}
+.perf-table td{font-family:'Space Mono',monospace;font-size:11px;padding:9px 14px;border-bottom:1px solid var(--border);}
+.perf-table td:first-child{color:var(--text);font-weight:700;font-family:'Space Grotesk',sans-serif;font-size:13px;}
+.perf-table td.bm{color:var(--text2);}
+.perf-table td.strat{color:var(--green);font-weight:700;}
+.perf-table td.strat-red{color:var(--red);font-weight:700;}
+.perf-table tr:last-child td{border-bottom:none;}
+.perf-table tr:hover td{background:var(--a2);}
+
+/* rolling indicator chip */
+.rolling-chip{
+  font-family:'Space Mono',monospace;font-size:8px;color:var(--accent);
+  border:1px solid var(--a4);padding:2px 7px;letter-spacing:.06em;
+  background:var(--a2);display:inline-block;
+}
+
+/* tab selector */
+.tab-selector{display:flex;gap:0;border:1px solid var(--border2);}
+.tab-opt{
+  font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);
+  padding:4px 10px;cursor:pointer;border-right:1px solid var(--border2);
+  transition:all .12s;letter-spacing:.04em;
+}
+.tab-opt:last-child{border-right:none;}
+.tab-opt:hover{background:var(--bg2);color:var(--text2);}
+.tab-opt.active{background:var(--accent);color:var(--panel);}
+
+/* disclaimer */
+.disclaimer{
+  font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);
+  padding:14px 16px;border-top:1px solid var(--border);
+  line-height:1.6;font-style:italic;
+}
+
+/* ── TICKER STRIP ── */
+.ticker-strip{
+  background:var(--text);overflow:hidden;height:28px;
+  display:flex;align-items:center;position:relative;z-index:1;
+}
+.tk-label{
+  font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.35);
+  letter-spacing:.12em;padding:0 12px;white-space:nowrap;
+  border-right:1px solid rgba(255,255,255,.1);height:28px;
+  display:flex;align-items:center;flex-shrink:0;
+}
+.ticker-scroll{flex:1;overflow:hidden;}
+.ticker-inner{display:flex;animation:ticker 35s linear infinite;}
+.ti{display:flex;align-items:center;gap:7px;padding:0 16px;border-right:1px solid rgba(255,255,255,.08);white-space:nowrap;height:28px;}
+.t-sym{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#fff;}
+.t-px{font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.45);}
+.t-chg{font-family:'Space Mono',monospace;font-size:9px;}
+.t-up{color:#4ADE80;}.t-dn{color:#F87171;}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.main>*{animation:fadeUp .3s ease forwards;opacity:0;}
+.main>*:nth-child(1){animation-delay:.05s;}
+.main>*:nth-child(2){animation-delay:.10s;}
+.main>*:nth-child(3){animation-delay:.15s;}
+.main>*:nth-child(4){animation-delay:.20s;}
+.main>*:nth-child(5){animation-delay:.25s;}
+.main>*:nth-child(6){animation-delay:.30s;}
+.main>*:nth-child(7){animation-delay:.35s;}
+.main>*:nth-child(8){animation-delay:.40s;}
+
+/* ── FOOTER ── */
+.page-footer{
+  background:var(--panel);border-top:1px solid var(--border2);
+  padding:16px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;z-index:1;
+}
+.pf-copy{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.06em;}
+.pf-disc{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);max-width:600px;line-height:1.55;}
+</style>
+</head>
+<body>
+
+<!-- CHROME BAR -->
+<div class="chrome-bar">
+  <div class="cdots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div>
+  <div class="chrome-title">pacmann.io — factor investing terminal · momentum40 · last updated 2026-04-23 08:02 UTC</div>
+</div>
+
+<!-- TOP NAV -->
+<div class="topnav">
+  <div class="tn-brand">
+    <div class="tn-logo">Pacmann<span>.</span></div>
+  </div>
+  <div class="tn-links">
+    <a class="active">Multi-Factor Portfolios</a>
+    <a>Cross-Sectional Factors</a>
+    <a>Risk Overlays</a>
+    <a>API &amp; Data</a>
+  </div>
+  <div class="tn-right">
+    <div class="live-ind"><div class="live-dot"></div><span>LIVE</span></div>
+    <span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);">JKT GMT+7</span>
+    <button class="btn-sm-outline">SIGN IN</button>
+    <button class="btn-sm">GET ACCESS →</button>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-strip">
+  <div class="tk-label">CRYPTO</div>
+  <div class="ticker-scroll"><div class="ticker-inner">
+    <div class="ti"><span class="t-sym">BTC</span><span class="t-px">78,044</span><span class="t-chg t-dn">▼−2.11%</span></div>
+    <div class="ti"><span class="t-sym">ETH</span><span class="t-px">2,344</span><span class="t-chg t-dn">▼−1.87%</span></div>
+    <div class="ti"><span class="t-sym">SOL</span><span class="t-px">85.94</span><span class="t-chg t-dn">▼−3.42%</span></div>
+    <div class="ti"><span class="t-sym">BNB</span><span class="t-px">635.86</span><span class="t-chg t-up">▲+0.72%</span></div>
+    <div class="ti"><span class="t-sym">XRP</span><span class="t-px">1.421</span><span class="t-chg t-dn">▼−1.04%</span></div>
+    <div class="ti"><span class="t-sym">SUI</span><span class="t-px">0.939</span><span class="t-chg t-up">▲+2.14%</span></div>
+    <div class="ti"><span class="t-sym">HYPE</span><span class="t-px">41.17</span><span class="t-chg t-up">▲+5.33%</span></div>
+    <div class="ti"><span class="t-sym">ADA</span><span class="t-px">0.247</span><span class="t-chg t-dn">▼−2.88%</span></div>
+    <div class="ti"><span class="t-sym">AAVE</span><span class="t-px">91.57</span><span class="t-chg t-up">▲+1.55%</span></div>
+    <div class="ti"><span class="t-sym">LINK</span><span class="t-px">9.239</span><span class="t-chg t-dn">▼−0.94%</span></div>
+    <div class="ti"><span class="t-sym">BTC</span><span class="t-px">78,044</span><span class="t-chg t-dn">▼−2.11%</span></div>
+    <div class="ti"><span class="t-sym">ETH</span><span class="t-px">2,344</span><span class="t-chg t-dn">▼−1.87%</span></div>
+    <div class="ti"><span class="t-sym">SOL</span><span class="t-px">85.94</span><span class="t-chg t-dn">▼−3.42%</span></div>
+    <div class="ti"><span class="t-sym">BNB</span><span class="t-px">635.86</span><span class="t-chg t-up">▲+0.72%</span></div>
+    <div class="ti"><span class="t-sym">XRP</span><span class="t-px">1.421</span><span class="t-chg t-dn">▼−1.04%</span></div>
+    <div class="ti"><span class="t-sym">SUI</span><span class="t-px">0.939</span><span class="t-chg t-up">▲+2.14%</span></div>
+    <div class="ti"><span class="t-sym">HYPE</span><span class="t-px">41.17</span><span class="t-chg t-up">▲+5.33%</span></div>
+    <div class="ti"><span class="t-sym">ADA</span><span class="t-px">0.247</span><span class="t-chg t-dn">▼−2.88%</span></div>
+    <div class="ti"><span class="t-sym">AAVE</span><span class="t-px">91.57</span><span class="t-chg t-up">▲+1.55%</span></div>
+    <div class="ti"><span class="t-sym">LINK</span><span class="t-px">9.239</span><span class="t-chg t-dn">▼−0.94%</span></div>
+  </div></div>
+</div>
+
+<!-- SUB-NAV -->
+<div class="subnav">
+  <div class="breadcrumb">
+    <a>Multi-Factor Portfolios</a>
+    <span>/</span>
+    <span class="bc-cur">Momentum40</span>
+  </div>
+  <div class="subnav-tabs">
+    <div class="subnav-tab active">OVERVIEW</div>
+    <div class="subnav-tab">BACKTEST</div>
+    <div class="subnav-tab">WEIGHTS</div>
+    <div class="subnav-tab">FACTORS</div>
+    <div class="subnav-tab">RISK</div>
+    <div class="subnav-tab">API</div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <!-- identity -->
+    <div class="sb-section" style="padding:0;">
+      <div class="sb-identity">
+        <div class="sb-portfolio-name">Momentum40</div>
+        <div class="sb-portfolio-sub">PACMANN FACTOR INVESTING</div>
+        <div class="sb-tags">
+          <span class="sb-tag sb-tag-accent">Market-Neutral</span>
+          <span class="sb-tag sb-tag-blue">Multi-Factor</span>
+          <span class="sb-tag sb-tag-dim">Top 40 Cap</span>
+          <span class="sb-tag sb-tag-dim">Daily Rebalance</span>
+          <span class="sb-tag sb-tag-dim">Survivorship-Free</span>
+        </div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.65;">
+          A market-neutral crypto portfolio combining five orthogonal factors. Assets weighted by inverse rolling volatility for balanced risk contribution.
+        </div>
+      </div>
+    </div>
+
+    <!-- config -->
+    <div class="sb-section">
+      <div class="sb-hd">Configuration</div>
+      <div class="sb-config">
+        <div class="sb-cfg-row"><span class="sb-cfg-k">EXCHANGE</span><span class="sb-cfg-v">Binance</span></div>
+        <div class="sb-cfg-row"><span class="sb-cfg-k">UNIVERSE</span><span class="sb-cfg-v">Top 40 Cap</span></div>
+        <div class="sb-cfg-row"><span class="sb-cfg-k">REBALANCE</span><span class="sb-cfg-v green">Daily</span></div>
+        <div class="sb-cfg-row"><span class="sb-cfg-k">SMOOTHING</span><span class="sb-cfg-v">None</span></div>
+        <div class="sb-cfg-row"><span class="sb-cfg-k">TX COST</span><span class="sb-cfg-v">0.05%</span></div>
+        <div class="sb-cfg-row"><span class="sb-cfg-k">LAST UPDATE</span><span class="sb-cfg-v green">08:02 UTC</span></div>
+      </div>
+    </div>
+
+    <!-- factors -->
+    <div class="sb-section">
+      <div class="sb-hd">Active Factors</div>
+      <div class="sb-factors">
+        <div class="factor-row">
+          <div class="factor-dot" style="background:#0B9E6E;"></div>
+          <span class="factor-name">Cross-Sectional Momentum</span>
+          <span class="factor-ic">IC 0.12</span>
+        </div>
+        <div class="factor-row">
+          <div class="factor-dot" style="background:#2563EB;"></div>
+          <span class="factor-name">Mean Reversion</span>
+          <span class="factor-ic">IC 0.09</span>
+        </div>
+        <div class="factor-row">
+          <div class="factor-dot" style="background:#9333EA;"></div>
+          <span class="factor-name">Enhanced Carry</span>
+          <span class="factor-ic">IC 0.08</span>
+        </div>
+        <div class="factor-row">
+          <div class="factor-dot" style="background:#D97706;"></div>
+          <span class="factor-name">Retail Flow</span>
+          <span class="factor-ic">IC 0.07</span>
+        </div>
+        <div class="factor-row">
+          <div class="factor-dot" style="background:#DC2626;"></div>
+          <span class="factor-name">Margin Risk</span>
+          <span class="factor-ic">IC 0.06</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- variants -->
+    <div class="sb-section">
+      <div class="sb-hd">Portfolio Variants</div>
+      <div class="sb-variants">
+        <div class="variant-card">
+          <div class="vc-name">Momentum20</div>
+          <div class="vc-meta">TOP 20 MARKET CAP · 5 FACTORS</div>
+        </div>
+        <div class="variant-card">
+          <div class="vc-name">Momentum30</div>
+          <div class="vc-meta">TOP 30 MARKET CAP · 5 FACTORS</div>
+        </div>
+        <div class="variant-card active">
+          <div class="vc-name">Momentum40 <span style="font-family:'Space Mono',monospace;font-size:8px;color:var(--accent);">● ACTIVE</span></div>
+          <div class="vc-meta">TOP 40 MARKET CAP · 5 FACTORS</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:16px;margin-top:auto;">
+      <button class="btn-sm" style="width:100%;text-align:center;display:block;">SUBSCRIBE · Rp 399.000/mo</button>
+      <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);text-align:center;margin-top:8px;">Full API access included</div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN CONTENT ══ -->
+  <main class="main">
+
+    <!-- METRICS STRIP -->
+    <div class="panel" style="overflow:hidden;">
+      <div class="ph">
+        <span class="ph-ttl">PERFORMANCE METRICS · VS BENCHMARK (BTC)</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="rolling-chip">SINCE INCEPTION</span>
+          <span class="ph-meta">Data as of 2026-04-23</span>
+        </div>
+      </div>
+      <div class="metrics-row">
+        <div class="metric-cell">
+          <div class="mc-label">CAGR</div>
+          <div class="mc-val green">151.7%</div>
+          <div class="mc-diff green">vs BTC 45.9%</div>
+        </div>
+        <div class="metric-cell">
+          <div class="mc-label">SHARPE</div>
+          <div class="mc-val green">3.07</div>
+          <div class="mc-diff green">vs BTC 0.93</div>
+        </div>
+        <div class="metric-cell">
+          <div class="mc-label">MAX DD</div>
+          <div class="mc-val amber">−26.4%</div>
+          <div class="mc-diff red">vs BTC −76.6%</div>
+        </div>
+        <div class="metric-cell">
+          <div class="mc-label">ALPHA</div>
+          <div class="mc-val green">0.93</div>
+          <div class="mc-diff">annualized</div>
+        </div>
+        <div class="metric-cell">
+          <div class="mc-label">BETA</div>
+          <div class="mc-val green">0.07</div>
+          <div class="mc-diff green">near-neutral</div>
+        </div>
+        <div class="metric-cell">
+          <div class="mc-label">VOLATILITY</div>
+          <div class="mc-val">31.7%</div>
+          <div class="mc-diff green">vs BTC 60.7%</div>
+        </div>
+        <div class="metric-cell">
+          <div class="mc-label">NET EXP.</div>
+          <div class="mc-val">20.4%</div>
+          <div class="mc-diff">avg rolling</div>
+        </div>
+        <div class="metric-cell">
+          <div class="mc-label">GROSS EXP.</div>
+          <div class="mc-val">200.5%</div>
+          <div class="mc-diff">avg rolling</div>
+        </div>
+        <div class="metric-cell">
+          <div class="mc-label">TURNOVER</div>
+          <div class="mc-val">68.6%</div>
+          <div class="mc-diff">daily avg</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EQUITY CURVE + PERFORMANCE TABLE -->
+    <div class="stats-side panel" style="overflow:hidden;">
+      <div>
+        <div class="ph"><span class="ph-ttl">CUMULATIVE EQUITY CURVE</span><div style="display:flex;gap:8px;"><div class="tab-selector"><div class="tab-opt">1M</div><div class="tab-opt">3M</div><div class="tab-opt">6M</div><div class="tab-opt active">1Y</div><div class="tab-opt">ALL</div></div></div></div>
+        <div style="padding:16px 16px 8px;">
+          <svg class="chart" viewBox="0 0 560 170" preserveAspectRatio="none" style="height:170px;display:block;">
+            <!-- grid lines -->
+            <line x1="0" y1="136" x2="560" y2="136" class="chart-grid-line"/>
+            <line x1="0" y1="102" x2="560" y2="102" class="chart-grid-line"/>
+            <line x1="0" y1="68"  x2="560" y2="68"  class="chart-grid-line"/>
+            <line x1="0" y1="34"  x2="560" y2="34"  class="chart-grid-line"/>
+            <!-- axis labels -->
+            <text x="562" y="139" class="chart-axis-label">0%</text>
+            <text x="562" y="105" class="chart-axis-label">+50%</text>
+            <text x="562" y="71"  class="chart-axis-label">+100%</text>
+            <text x="562" y="37"  class="chart-axis-label">+150%</text>
+            <!-- BTC benchmark fill -->
+            <path d="M0,136 C20,133 40,128 60,122 C80,116 100,108 120,118 C140,128 160,120 180,115 C200,110 220,105 240,100 C260,95 280,98 300,92 C320,86 340,80 360,75 C380,70 400,65 420,70 C440,75 460,72 480,68 C500,64 520,60 540,58 L560,55 L560,136 Z" fill="var(--blue)" opacity=".06"/>
+            <path d="M0,136 C20,133 40,128 60,122 C80,116 100,108 120,118 C140,128 160,120 180,115 C200,110 220,105 240,100 C260,95 280,98 300,92 C320,86 340,80 360,75 C380,70 400,65 420,70 C440,75 460,72 480,68 C500,64 520,60 540,58 L560,55" class="chart-line" stroke="var(--blue2)" style="opacity:.5;stroke:var(--chart-blue);stroke-width:1.2;stroke-dasharray:4,3;"/>
+            <!-- Strategy equity fill -->
+            <path d="M0,136 C15,134 30,130 45,126 C60,122 75,116 90,110 C105,104 120,99 135,93 C150,87 165,82 180,78 C195,74 210,70 225,65 C240,60 255,56 270,52 C285,48 300,44 315,40 C330,36 345,32 360,28 C375,24 390,22 405,19 C420,16 435,14 450,12 C465,10 480,9 495,8 C510,7 525,7 540,6 L560,5 L560,136 Z" fill="var(--accent)" opacity=".07"/>
+            <path d="M0,136 C15,134 30,130 45,126 C60,122 75,116 90,110 C105,104 120,99 135,93 C150,87 165,82 180,78 C195,74 210,70 225,65 C240,60 255,56 270,52 C285,48 300,44 315,40 C330,36 345,32 360,28 C375,24 390,22 405,19 C420,16 435,14 450,12 C465,10 480,9 495,8 C510,7 525,7 540,6 L560,5" class="chart-line" stroke="var(--chart-green)"/>
+            <!-- current value dot -->
+            <circle cx="560" cy="5" r="3.5" fill="var(--chart-green)"/>
+            <circle cx="560" cy="55" r="3" fill="var(--chart-blue)" opacity=".6"/>
+          </svg>
+          <div style="display:flex;align-items:center;gap:20px;padding-top:8px;">
+            <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:2px;background:var(--chart-green);"></div><span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);">MOMENTUM40</span><span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--green);font-weight:700;">+151.7%</span></div>
+            <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:2px;background:var(--chart-blue);opacity:.6;border-top:1px dashed var(--chart-blue);"></div><span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);">BTC (benchmark)</span><span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text2);font-weight:700;">+45.9%</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="border-left:1px solid var(--border2);">
+        <div class="ph"><span class="ph-ttl">PERFORMANCE VS BENCHMARK</span></div>
+        <table class="perf-table">
+          <thead><tr><th>METRIC</th><th>BTC</th><th class="hl">MOMENTUM40</th></tr></thead>
+          <tbody>
+            <tr><td>Sharpe Ratio</td><td class="bm">0.93</td><td class="strat">3.07</td></tr>
+            <tr><td>CAGR</td><td class="bm">45.9%</td><td class="strat">151.7%</td></tr>
+            <tr><td>Alpha</td><td class="bm">0.00</td><td class="strat">0.93</td></tr>
+            <tr><td>Beta</td><td class="bm">1.00</td><td class="strat">0.07</td></tr>
+            <tr><td>Max Drawdown</td><td class="bm" style="color:var(--red);">−76.6%</td><td class="strat-red">−26.4%</td></tr>
+            <tr><td>Volatility</td><td class="bm">60.7%</td><td class="strat">31.7%</td></tr>
+            <tr><td>Daily Turnover</td><td class="bm">0%</td><td style="color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;">68.6%</td></tr>
+            <tr><td>Avg Net Exp.</td><td class="bm">100%</td><td style="color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;">20.4%</td></tr>
+            <tr><td>Avg Gross Exp.</td><td class="bm">100%</td><td style="color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;">200.5%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ROLLING CHARTS ROW -->
+    <div class="panel" style="overflow:hidden;">
+      <div class="ph"><span class="ph-ttl">ROLLING METRICS</span><span class="ph-meta">12-MONTH ROLLING WINDOW</span></div>
+      <div class="chart-grid-3" style="background:var(--border);">
+
+        <!-- Rolling Sharpe -->
+        <div class="chart-box">
+          <div class="ph" style="background:transparent;border-bottom:1px solid var(--border);"><span class="ph-ttl">SHARPE RATIO</span><span class="ph-meta green">3.07 current</span></div>
+          <div class="chart-canvas">
+            <svg class="chart" viewBox="0 0 240 110" preserveAspectRatio="none">
+              <line x1="0" y1="88" x2="240" y2="88" class="chart-grid-line"/>
+              <line x1="0" y1="66" x2="240" y2="66" class="chart-grid-line"/>
+              <line x1="0" y1="44" x2="240" y2="44" class="chart-grid-line"/>
+              <line x1="0" y1="22" x2="240" y2="22" class="chart-grid-line"/>
+              <!-- zero line -->
+              <line x1="0" y1="88" x2="240" y2="88" class="chart-zero"/>
+              <path d="M0,75 C20,70 40,65 60,58 C80,51 100,60 120,52 C140,44 160,38 180,30 C200,22 220,18 240,14" class="chart-line" stroke="var(--chart-green)"/>
+              <path d="M0,75 C20,70 40,65 60,58 C80,51 100,60 120,52 C140,44 160,38 180,30 C200,22 220,18 240,14 L240,88 L0,88 Z" fill="var(--chart-green)" opacity=".06"/>
+              <circle cx="240" cy="14" r="3" fill="var(--chart-green)"/>
+              <text x="2" y="92" class="chart-axis-label">0</text>
+              <text x="2" y="70" class="chart-axis-label">1</text>
+              <text x="2" y="48" class="chart-axis-label">2</text>
+              <text x="2" y="26" class="chart-axis-label">3</text>
+            </svg>
+          </div>
+          <div class="chart-label-row">
+            <span class="chart-label-k">JAN 2025</span>
+            <span class="chart-label-v green">3.07 APR 2026</span>
+          </div>
+        </div>
+
+        <!-- Rolling Beta -->
+        <div class="chart-box" style="border-left:1px solid var(--border2);">
+          <div class="ph" style="background:transparent;border-bottom:1px solid var(--border);"><span class="ph-ttl">BETA vs BTC</span><span class="ph-meta green">0.07 current</span></div>
+          <div class="chart-canvas">
+            <svg class="chart" viewBox="0 0 240 110" preserveAspectRatio="none">
+              <line x1="0" y1="88" x2="240" y2="88" class="chart-grid-line"/>
+              <line x1="0" y1="66" x2="240" y2="66" class="chart-grid-line"/>
+              <line x1="0" y1="44" x2="240" y2="44" class="chart-grid-line"/>
+              <!-- zero line at 0.5 (beta=0) -->
+              <line x1="0" y1="66" x2="240" y2="66" class="chart-zero" style="stroke:var(--border3);"/>
+              <path d="M0,42 C20,38 40,45 60,50 C80,55 100,48 120,44 C140,40 160,36 180,32 C200,28 220,25 240,22" class="chart-line" stroke="var(--chart-blue)" style="stroke-dasharray:none;"/>
+              <path d="M0,42 C20,38 40,45 60,50 C80,55 100,48 120,44 C140,40 160,36 180,32 C200,28 220,25 240,22 L240,88 L0,88 Z" fill="var(--chart-blue)" opacity=".05"/>
+              <circle cx="240" cy="22" r="3" fill="var(--chart-blue)"/>
+              <text x="2" y="92" class="chart-axis-label">0</text>
+              <text x="2" y="70" class="chart-axis-label">.25</text>
+              <text x="2" y="48" class="chart-axis-label">.50</text>
+              <text x="2" y="26" class="chart-axis-label">.75</text>
+            </svg>
+          </div>
+          <div class="chart-label-row">
+            <span class="chart-label-k">JAN 2025</span>
+            <span class="chart-label-v green">0.07 APR 2026</span>
+          </div>
+        </div>
+
+        <!-- Net Exposure -->
+        <div class="chart-box" style="border-left:1px solid var(--border2);">
+          <div class="ph" style="background:transparent;border-bottom:1px solid var(--border);"><span class="ph-ttl">NET EXPOSURE</span><span class="ph-meta">20.4% current</span></div>
+          <div class="chart-canvas">
+            <svg class="chart" viewBox="0 0 240 110" preserveAspectRatio="none">
+              <line x1="0" y1="88" x2="240" y2="88" class="chart-grid-line"/>
+              <line x1="0" y1="66" x2="240" y2="66" class="chart-grid-line"/>
+              <line x1="0" y1="44" x2="240" y2="44" class="chart-grid-line"/>
+              <line x1="0" y1="22" x2="240" y2="22" class="chart-grid-line"/>
+              <!-- zero line center -->
+              <line x1="0" y1="55" x2="240" y2="55" class="chart-zero"/>
+              <!-- exposure oscillates around zero -->
+              <path d="M0,52 C10,44 20,58 30,50 C40,42 50,35 60,40 C70,45 80,55 90,48 C100,41 110,33 120,38 C130,43 140,52 150,46 C160,40 170,33 180,38 C190,43 200,50 210,44 C220,38 230,42 240,45" class="chart-line" stroke="var(--chart-amber)"/>
+              <circle cx="240" cy="45" r="3" fill="var(--chart-amber)"/>
+              <text x="2" y="92" class="chart-axis-label">−50%</text>
+              <text x="2" y="70" class="chart-axis-label">−25%</text>
+              <text x="2" y="48" class="chart-axis-label">0%</text>
+              <text x="2" y="26" class="chart-axis-label">+25%</text>
+            </svg>
+          </div>
+          <div class="chart-label-row">
+            <span class="chart-label-k">JAN 2025</span>
+            <span class="chart-label-v">20.4% APR 2026</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FACTOR SCORES -->
+    <div class="panel" style="overflow:hidden;">
+      <div class="ph">
+        <span class="ph-ttl">CURRENT FACTOR SCORES · TOP 10 ASSETS</span>
+        <span class="ph-meta">Updated 2026-04-23 08:02 UTC</span>
+      </div>
+      <div class="factor-score-grid">
+
+        <div class="fs-cell">
+          <div class="fs-name">CROSS-SECTIONAL MOMENTUM</div>
+          <div class="fs-bar-row"><span class="fs-ticker">HYPE</span><div class="fs-bar-bg"><div class="fs-bar-fill" style="width:92%;background:#0B9E6E;"></div></div><span class="fs-score" style="color:var(--green);">0.92</span></div>
+          <div class="fs-bar-row"><span class="fs-ticker">SUI</span><div class="fs-bar-bg"><div class="fs-bar-fill" style="width:81%;background:#0B9E6E;"></div></div><span class="fs-score" style="color:var(--green);">0.81</span></div>
+          <div class="fs-bar-row"><span class="fs-ticker">AAVE</span><div class="fs-bar-bg"><div class="fs-bar-fill" style="width:74%;background:#0B9E6E;"></div></div><span class="fs-score" style="color:var(--green);">0.74</span></div>
+          <div class="fs-bar-row"><span class="fs-ticker">BNB</span><div class="fs-bar-bg"><div class="fs-bar-fill" style="width:68%;background:#0B9E6E;"></div></div><span class="fs-score" style="color:var(--green);">0.68</span></div>
+          <div class="fs-bar-row"><span class="fs-ticker">TAO</span><div class="fs-bar-bg"><div class="fs-bar-fill" style="width:61%;background:#0B9E6E;opacity:.7;"></div></div><span class="fs-score" style="color:var(--text3);">0.61</span></div>
+        </div>
+
+        <div class="fs-cell" style="border-left:1px solid var(--border);">
+          <div class="fs-name">MEAN REVERSION</div>
+          <div class="fs-bar-row"><span class="fs-ticker">BTC</span><div class="fs-bar-bg"><div class="fs-bar-fill" style="width:78%;background:#2563EB;"></div></div><span class="fs-score" style="color:#2563EB;">0.78</span></div>
+          <div class="fs-bar-row"><span class="fs-ticker">ETH</span><div class="fs-bar-bg"><div class="fs-bar-fill" style="width:71%;background:#2563EB;"></div></div><span class="fs-score" style="color:#2563EB;">0.71</span></div>
+          <div class="fs-bar-row"><span class="fs-ticker">SOL</span><div class="fs-bar-bg"><div class="fs-bar-fill" style="width:64%;background:#2563EB;opacity:.8;"></div></div><span class="fs-score" style="color:var(--text3);">0.64</span></div>
+          <div class="fs-bar-row"><span class="fs-ticker">ADA</span><div class="fs-bar-bg"><div class="fs-bar-fill" style="width:59%;background:#2563EB;opacity:.7;"></div></div><span class="fs-score" style="color:var(--text3);">0.59</span></div>
+          <div class="fs-bar-row"><span class="fs-ticker">DOT</span><div class="fs-bar-bg"><div class="fs-bar-fill" style="width:51%;background:#2563EB;opacity:.6;"></div></div><span class="fs-score" style="color:var(--text3);">0.51</span></div>
+        </div>
+
+        <div class="fs-cell" style="border-left:1px solid var(--border);">
+          <div class="fs-name">ENHANCED CARRY</div>
+          <div class="fs-bar-row"><span class="fs-ticker">ONDO</span><div class="fs-bar-bg"><div class="fs-bar-fill" style="width:85%;background:#9333EA;"></div></div><span class="fs-score" style="color:#9333EA;">0.85</span></div>
+          <div class="fs-bar-row"><span class="fs-ticker">LINK</span><div class="fs-bar-bg"><div class="fs-bar-fill" style="width:77%;background:#9333EA;opacity:.85;"></div></div><span class="fs-score" style="color:#9333EA;">0.77</span></div>
+          <div class="fs-bar-row"><span class="fs-ticker">UNI</span><div class="fs-bar-bg"><div class="fs-bar-fill" style="width:69%;background:#9333EA;opacity:.75;"></div></div><span class="fs-score" style="color:var(--text3);">0.69</span></div>
+          <div class="fs-bar-row"><span class="fs-ticker">ATOM</span><div class="fs-bar-bg"><div class="fs-bar-fill" style="width:58%;background:#9333EA;opacity:.65;"></div></div><span class="fs-score" style="color:var(--text3);">0.58</span></div>
+          <div class="fs-bar-row"><span class="fs-ticker">NEAR</span><div class="fs-bar-bg"><div class="fs-bar-fill" style="width:48%;background:#9333EA;opacity:.55;"></div></div><span class="fs-score" style="color:var(--text3);">0.48</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CURRENT WEIGHTS TABLE -->
+    <div class="panel" style="overflow:hidden;">
+      <div class="ph">
+        <span class="ph-ttl">CURRENT WEIGHTS</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="ph-meta green">● LIVE · 2026-04-23 08:02 UTC</span>
+          <button class="btn-sm-outline" style="font-size:9px;padding:3px 10px;">EXPORT CSV</button>
+        </div>
+      </div>
+      <table class="weights-table">
+        <thead>
+          <tr>
+            <th style="width:44px;">#</th>
+            <th>TICKER</th>
+            <th>NAME</th>
+            <th class="right">ARRIVAL PRICE</th>
+            <th class="right">WEIGHT</th>
+            <th>ALLOCATION</th>
+            <th>DIRECTION</th>
+            <th class="right">VOL (30D)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>01</td><td class="sym">HYPE</td><td>Hyperliquid</td><td class="right">$41.17</td><td class="right green">+12.4%</td><td><div class="weight-bar-wrap"><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:62%;"></div></div><span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);">12.4%</span></div></td><td><span class="pos-badge pos-long">LONG</span></td><td class="right">38.2%</td></tr>
+          <tr><td>02</td><td class="sym">SUI</td><td>Sui</td><td class="right">$0.939</td><td class="right green">+10.8%</td><td><div class="weight-bar-wrap"><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:54%;"></div></div><span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);">10.8%</span></div></td><td><span class="pos-badge pos-long">LONG</span></td><td class="right">52.1%</td></tr>
+          <tr><td>03</td><td class="sym">AAVE</td><td>Aave</td><td class="right">$91.57</td><td class="right green">+9.2%</td><td><div class="weight-bar-wrap"><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:46%;"></div></div><span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);">9.2%</span></div></td><td><span class="pos-badge pos-long">LONG</span></td><td class="right">44.7%</td></tr>
+          <tr><td>04</td><td class="sym">BNB</td><td>Binance Coin</td><td class="right">$635.87</td><td class="right green">+8.6%</td><td><div class="weight-bar-wrap"><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:43%;"></div></div><span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);">8.6%</span></div></td><td><span class="pos-badge pos-long">LONG</span></td><td class="right">29.4%</td></tr>
+          <tr><td>05</td><td class="sym">ONDO</td><td>ONDO</td><td class="right">$0.259</td><td class="right green">+7.9%</td><td><div class="weight-bar-wrap"><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:40%;"></div></div><span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);">7.9%</span></div></td><td><span class="pos-badge pos-long">LONG</span></td><td class="right">61.3%</td></tr>
+          <tr><td>06</td><td class="sym">BTC</td><td>Bitcoin</td><td class="right">$78,044</td><td class="right" style="color:var(--text2);">+4.1%</td><td><div class="weight-bar-wrap"><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:21%;"></div></div><span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);">4.1%</span></div></td><td><span class="pos-badge pos-long">LONG</span></td><td class="right">22.8%</td></tr>
+          <tr><td>07</td><td class="sym">XRP</td><td>Ripple</td><td class="right">$1.421</td><td class="right red">−6.3%</td><td><div class="weight-bar-wrap"><div class="weight-bar-bg"><div class="weight-bar-fill neg" style="width:32%;"></div></div><span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);">6.3%</span></div></td><td><span class="pos-badge pos-short">SHORT</span></td><td class="right">34.9%</td></tr>
+          <tr><td>08</td><td class="sym">SOL</td><td>Solana</td><td class="right">$85.94</td><td class="right red">−8.1%</td><td><div class="weight-bar-wrap"><div class="weight-bar-bg"><div class="weight-bar-fill neg" style="width:41%;"></div></div><span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);">8.1%</span></div></td><td><span class="pos-badge pos-short">SHORT</span></td><td class="right">48.2%</td></tr>
+          <tr><td>09</td><td class="sym">DOGE</td><td>Dogecoin</td><td class="right">$0.0959</td><td class="right red">−5.7%</td><td><div class="weight-bar-wrap"><div class="weight-bar-bg"><div class="weight-bar-fill neg" style="width:29%;"></div></div><span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);">5.7%</span></div></td><td><span class="pos-badge pos-short">SHORT</span></td><td class="right">57.6%</td></tr>
+          <tr><td>10</td><td class="sym">ETH</td><td>Ethereum</td><td class="right">$2,344</td><td class="right" style="color:var(--text3);">0.00%</td><td><div class="weight-bar-wrap"><div class="weight-bar-bg"><div class="weight-bar-fill" style="width:0%;"></div></div><span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);">0.0%</span></div></td><td><span class="pos-badge pos-flat">FLAT</span></td><td class="right">41.5%</td></tr>
+        </tbody>
+      </table>
+      <div class="disclaimer">* Portfolio designed to be market-neutral on a volatility-adjusted basis. Weights reflect volatility-scaled positions; net directional exposure may vary daily. Not investment advice.</div>
+    </div>
+
+    <!-- DESCRIPTION + PROPERTIES -->
+    <div class="stats-side panel" style="overflow:hidden;">
+      <div>
+        <div class="ph"><span class="ph-ttl">PORTFOLIO DESCRIPTION</span></div>
+        <div style="padding:16px;">
+          <p class="desc-text">Momentum40 is a market-neutral crypto portfolio that combines five orthogonal cross-sectional factors. To balance each asset's risk contribution, positions are scaled according to the inverse of their rolling volatility.</p>
+          <p class="desc-text">The asset universe consists of the 40 most liquid and actively traded assets, identified on a rolling basis using volume, open interest, and volatility filters — survivorship-bias free.</p>
+          <ul class="desc-ul">
+            <li>Cross-Sectional Momentum</li>
+            <li>Mean Reversion</li>
+            <li>Enhanced Carry</li>
+            <li>Retail Flow Signal</li>
+            <li>Margin Risk Factor</li>
+          </ul>
+        </div>
+      </div>
+      <div style="border-left:1px solid var(--border2);">
+        <div class="ph"><span class="ph-ttl">PROPERTIES</span></div>
+        <table class="props-table">
+          <tbody>
+            <tr><td>Construction</td><td>Cross-sectional binning (quantiles) + inverse volatility weighting</td></tr>
+            <tr><td>Universe</td><td><strong>Top 40 market cap</strong>, rolling, survivorship-bias free</td></tr>
+            <tr><td>Rebalancing</td><td><strong>Daily</strong>, with hourly updates (UTC+0, :05 past hour)</td></tr>
+            <tr><td>Out-of-sample</td><td>From <strong>2024-01-01</strong>. Factors traded live from 2025-01-01</td></tr>
+            <tr><td>TX Costs</td><td><strong>0.05%</strong> per position adjustment</td></tr>
+            <tr><td>Research cutoff</td><td>2024-01-01 (all data before is in-sample)</td></tr>
+            <tr><td>Exchange</td><td><strong>Binance</strong> perpetual futures</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="page-footer" style="border-top:2px solid var(--border3);padding:16px 0 0;background:transparent;">
+      <div class="pf-copy">© 2026 PACMANN ACADEMY · FACTOR INVESTING PLATFORM</div>
+      <div class="pf-disc">Ilustrasi dan data bersifat edukatif. Bukan rekomendasi investasi. Performa historis tidak menjamin hasil di masa depan. Keputusan investasi sepenuhnya tanggung jawab investor.</div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

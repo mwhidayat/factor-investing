@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pacmann · Momentum40 — Factor Investing Dashboard</title>
+<title>Pacmann · Factor Data</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
@@ -328,16 +328,13 @@ svg.ch{width:100%;overflow:visible;}
 <!-- CHROME BAR -->
 <div class="chrome">
   <div class="cdots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div>
-  <div class="chrome-title">pacmann.io — factor investing terminal · momentum40 · last updated 2026-04-23 08:02 UTC</div>
+  <div class="chrome-title">pacmann.io — factor data tool · last updated 2026-04-23 08:02 UTC</div>
 </div>
 
 <!-- TOP NAV -->
 <div class="topnav">
   <div class="tn-brand"><div class="tn-logo">Pacmann<span>.</span></div></div>
 <!--   <div class="tn-links">
-    <a class="active" onclick="setTopTab(this)">Multi-Factor Portfolios</a>
-    <a onclick="setTopTab(this)">Cross-Sectional Factors</a>
-    <a onclick="setTopTab(this)">Risk Overlays</a>
   </div> -->
   <div class="tn-right">
     <div class="live-ind"><div class="live-dot"></div><span>LIVE</span></div>
@@ -380,15 +377,11 @@ svg.ch{width:100%;overflow:visible;}
 
 <!-- SUBNAV -->
 <div class="subnav">
-  <div class="breadcrumb">
-    <a>Multi-Factor Portfolios</a><span class="sep">/</span><span class="bc-cur">Momentum40</span>
-  </div>
   <div class="subnav-tabs">
     <div class="sntab active" onclick="switchTab('overview',this)">OVERVIEW</div>
     <div class="sntab" onclick="switchTab('backtest',this)">BACKTEST</div>
     <div class="sntab" onclick="switchTab('weights',this)">WEIGHTS</div>
     <div class="sntab" onclick="switchTab('factors',this)">CROSS-SECTIONAL FACTORS</div>
-    <div class="sntab" onclick="switchTab('risk',this)">RISK OVERLAYS</div>
   </div>
 </div>
 
@@ -400,7 +393,7 @@ svg.ch{width:100%;overflow:visible;}
   <div class="sb-sec">
     <div class="sb-id">
       <div class="sb-name">Momentum40</div>
-      <div class="sb-sub">PACMANN FACTOR INVESTING</div>
+      <div class="sb-sub">PACMANN FACTOR DATA</div>
       <div class="sb-tags">
         <span class="sbt sbt-a">Market-Neutral</span>
         <span class="sbt sbt-b">Multi-Factor</span>
@@ -793,203 +786,9 @@ svg.ch{width:100%;overflow:visible;}
 
 </div><!-- /tab-weights -->
 
-
-<!-- ════ TAB: CROSS-SECTIONAL FACTORS ════ -->
-<div id="tab-factors" class="tab-content">
-
-  <div class="pnl">
-    <div class="ph"><span class="ph-ttl">CROSS-SECTIONAL FACTORS · MOMENTUM40</span><span class="ph-r">6 ACTIVE FACTORS · TOP 40 UNIVERSE</span></div>
-    <div class="pb" style="background:var(--a2);border-bottom:1px solid var(--border);">
-      <p style="font-size:12px;color:var(--text2);">Each factor is orthogonal and independently predictive. We recommend using a portfolio of factors — alpha from individual factors is not consistent enough alone. Even a simple average of 3–5 orthogonal factors produces superior risk-adjusted returns.</p>
-    </div>
-  </div>
-
-  <!-- Factor cards -->
-  <div style="display:flex;flex-direction:column;gap:12px;">
-
-    <div class="factor-card">
-      <div class="fc-head">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-          <div class="fc-name">Enhanced Momentum</div>
-          <div style="display:flex;gap:6px;"><span class="chip">IC 0.12</span><span class="chip-tier chip-t3">Tier 3</span></div>
-        </div>
-        <div class="fc-meta">
-          <span><div style="width:7px;height:7px;border-radius:50%;background:#0B9E6E;display:inline-block;margin-right:4px;"></div>Orthogonal</span>
-          <span>Smoothing: 10D MA</span>
-          <span>Turnover: 42% daily</span>
-          <span>Universe: Top 40</span>
-        </div>
-      </div>
-      <div class="fc-body">
-        <p class="fc-desc">Cross-sectional momentum factor that ranks assets by their recent risk-adjusted returns. Enhanced with volatility normalization and residual momentum to remove market-beta contamination. Assets in the top quantile are long; bottom quantile short.</p>
-        <div class="fc-stats">
-          <div class="fc-stat"><div class="fc-stat-l">SHARPE</div><div class="fc-stat-v green">2.14</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">CAGR</div><div class="fc-stat-v green">84.3%</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">MAX DD</div><div class="fc-stat-v amber">−38.2%</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">IC (avg)</div><div class="fc-stat-v green">0.12</div></div>
-        </div>
-        <!-- mini quantile return chart -->
-        <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px;">QUANTILE RETURNS (Q1 = SHORT, Q5 = LONG)</div>
-        <div style="display:flex;align-items:flex-end;gap:4px;height:60px;padding:0 0 4px;">
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="flex:1;width:100%;background:var(--red);opacity:.7;height:80%;align-self:flex-end;min-height:8px;max-height:44px;height:44px;"></div><span style="font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);">Q1</span></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:var(--red);opacity:.4;height:24px;align-self:flex-end;"></div><span style="font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);">Q2</span></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:var(--bg3);height:10px;align-self:flex-end;"></div><span style="font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);">Q3</span></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:var(--cg);opacity:.5;height:28px;align-self:flex-end;"></div><span style="font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);">Q4</span></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:var(--cg);opacity:.9;height:50px;align-self:flex-end;"></div><span style="font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);">Q5</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="factor-card">
-      <div class="fc-head">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-          <div class="fc-name">Enhanced Carry</div>
-          <div style="display:flex;gap:6px;"><span class="chip">IC 0.09</span><span class="chip-tier chip-t3">Tier 3</span></div>
-        </div>
-        <div class="fc-meta">
-          <span><div style="width:7px;height:7px;border-radius:50%;background:#2563EB;display:inline-block;margin-right:4px;"></div>Orthogonal</span>
-          <span>Smoothing: None</span>
-          <span>Turnover: 28% daily</span>
-          <span>Universe: Top 40</span>
-        </div>
-      </div>
-      <div class="fc-body">
-        <p class="fc-desc">Carry factor based on perpetual futures funding rates, enhanced with open interest weighting and term-structure signals. Positive carry assets are long; negative carry short. Captures the risk premium embedded in futures basis.</p>
-        <div class="fc-stats">
-          <div class="fc-stat"><div class="fc-stat-l">SHARPE</div><div class="fc-stat-v green">1.88</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">CAGR</div><div class="fc-stat-v green">61.4%</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">MAX DD</div><div class="fc-stat-v amber">−42.1%</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">IC (avg)</div><div class="fc-stat-v green">0.09</div></div>
-        </div>
-        <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px;">QUANTILE RETURNS</div>
-        <div style="display:flex;align-items:flex-end;gap:4px;height:60px;padding:0 0 4px;">
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:var(--red);opacity:.65;height:38px;align-self:flex-end;"></div><span style="font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);">Q1</span></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:var(--red);opacity:.3;height:18px;align-self:flex-end;"></div><span style="font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);">Q2</span></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:var(--bg3);height:8px;align-self:flex-end;"></div><span style="font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);">Q3</span></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:var(--cg);opacity:.45;height:22px;align-self:flex-end;"></div><span style="font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);">Q4</span></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:var(--cg);opacity:.85;height:44px;align-self:flex-end;"></div><span style="font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);">Q5</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="factor-card">
-      <div class="fc-head">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-          <div class="fc-name">Retail Flow</div>
-          <div style="display:flex;gap:6px;"><span class="chip">IC 0.08</span><span class="chip-tier chip-t3">Tier 3</span></div>
-        </div>
-        <div class="fc-meta">
-          <span><div style="width:7px;height:7px;border-radius:50%;background:#9333EA;display:inline-block;margin-right:4px;"></div>Orthogonal</span>
-          <span>Smoothing: 5D MA</span>
-          <span>Turnover: 55% daily</span>
-          <span>Universe: Top 40</span>
-        </div>
-      </div>
-      <div class="fc-body">
-        <p class="fc-desc">Contrarian factor based on retail trader positioning from on-chain and exchange data. When retail sentiment is excessively long on an asset, the factor goes short — capturing the mean-reversion after retail-driven price inflation.</p>
-        <div class="fc-stats">
-          <div class="fc-stat"><div class="fc-stat-l">SHARPE</div><div class="fc-stat-v green">1.72</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">CAGR</div><div class="fc-stat-v green">54.8%</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">MAX DD</div><div class="fc-stat-v amber">−44.6%</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">IC (avg)</div><div class="fc-stat-v green">0.08</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="factor-card">
-      <div class="fc-head">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-          <div class="fc-name">Margin Risk</div>
-          <div style="display:flex;gap:6px;"><span class="chip">IC 0.07</span><span class="chip-tier chip-t3">Tier 3</span></div>
-        </div>
-        <div class="fc-meta">
-          <span><div style="width:7px;height:7px;border-radius:50%;background:#D97706;display:inline-block;margin-right:4px;"></div>Orthogonal</span>
-          <span>Smoothing: None</span>
-          <span>Turnover: 38% daily</span>
-        </div>
-      </div>
-      <div class="fc-body">
-        <p class="fc-desc">Factor measuring leverage risk in perpetual futures markets. Assets with high open interest relative to market cap and elevated leverage ratios are shorted; assets with low leverage are longed. Captures forced liquidation risk premium.</p>
-        <div class="fc-stats">
-          <div class="fc-stat"><div class="fc-stat-l">SHARPE</div><div class="fc-stat-v green">1.58</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">CAGR</div><div class="fc-stat-v green">48.2%</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">MAX DD</div><div class="fc-stat-v amber">−51.3%</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">IC (avg)</div><div class="fc-stat-v green">0.07</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="factor-card">
-      <div class="fc-head">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-          <div class="fc-name">Altair</div>
-          <div style="display:flex;gap:6px;"><span class="chip">IC 0.09</span><span class="chip-tier chip-t3">Tier 3</span></div>
-        </div>
-        <div class="fc-meta">
-          <span><div style="width:7px;height:7px;border-radius:50%;background:#DC2626;display:inline-block;margin-right:4px;"></div>Orthogonal · Proprietary</span>
-          <span>Smoothing: None</span>
-          <span>Turnover: 31% daily</span>
-        </div>
-      </div>
-      <div class="fc-body">
-        <p class="fc-desc">Proprietary composite factor combining on-chain velocity, developer activity, and protocol revenue signals. Ranks assets by fundamental health relative to market pricing. Details are partially obfuscated for Tier 3 subscribers.</p>
-        <div class="fc-stats">
-          <div class="fc-stat"><div class="fc-stat-l">SHARPE</div><div class="fc-stat-v green">1.94</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">CAGR</div><div class="fc-stat-v green">66.1%</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">MAX DD</div><div class="fc-stat-v amber">−39.8%</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">IC (avg)</div><div class="fc-stat-v green">0.09</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="factor-card">
-      <div class="fc-head">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-          <div class="fc-name">Mean Reversion</div>
-          <div style="display:flex;gap:6px;"><span class="chip">IC 0.06</span><span class="chip-tier chip-t3">Tier 3</span></div>
-        </div>
-        <div class="fc-meta">
-          <span><div style="width:7px;height:7px;border-radius:50%;background:#0EA5E9;display:inline-block;margin-right:4px;"></div>Orthogonal</span>
-          <span>Smoothing: None</span>
-          <span>Turnover: 68% daily</span>
-        </div>
-      </div>
-      <div class="fc-body">
-        <p class="fc-desc">Short-term mean reversion factor that exploits overreactions in crypto markets. Assets that have significantly underperformed over 1–5 days are longed; assets that have significantly outperformed are shorted. High turnover but low correlation with other factors.</p>
-        <div class="fc-stats">
-          <div class="fc-stat"><div class="fc-stat-l">SHARPE</div><div class="fc-stat-v green">1.44</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">CAGR</div><div class="fc-stat-v green">42.7%</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">MAX DD</div><div class="fc-stat-v amber">−47.2%</div></div>
-          <div class="fc-stat"><div class="fc-stat-l">IC (avg)</div><div class="fc-stat-v green">0.06</div></div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="pnl">
-    <div class="ph"><span class="ph-ttl">FACTOR CORRELATION MATRIX</span><span class="ph-r">ORTHOGONALITY CHECK · LOW CORRELATION = GOOD</span></div>
-    <div style="overflow-x:auto;">
-      <table class="wt" style="min-width:500px;">
-        <thead><tr><th></th><th>E.MOM</th><th>E.CARRY</th><th>R.FLOW</th><th>MRG.RISK</th><th>ALTAIR</th><th>MEAN.REV</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">E.MOM</td><td style="color:var(--text3);font-family:'Space Mono',monospace;font-size:11px;">1.00</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.04</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">−0.02</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.07</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.11</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--red);">−0.38</td></tr>
-          <tr><td class="sym">E.CARRY</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.04</td><td style="color:var(--text3);font-family:'Space Mono',monospace;font-size:11px;">1.00</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.09</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.03</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.06</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.01</td></tr>
-          <tr><td class="sym">R.FLOW</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">−0.02</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.09</td><td style="color:var(--text3);font-family:'Space Mono',monospace;font-size:11px;">1.00</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.12</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">−0.05</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.08</td></tr>
-          <tr><td class="sym">MRG.RISK</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.07</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.03</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.12</td><td style="color:var(--text3);font-family:'Space Mono',monospace;font-size:11px;">1.00</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.08</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">−0.03</td></tr>
-          <tr><td class="sym">ALTAIR</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.11</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.06</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">−0.05</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.08</td><td style="color:var(--text3);font-family:'Space Mono',monospace;font-size:11px;">1.00</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.02</td></tr>
-          <tr><td class="sym">MEAN.REV</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--red);">−0.38</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.01</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.08</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">−0.03</td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green);">0.02</td><td style="color:var(--text3);font-family:'Space Mono',monospace;font-size:11px;">1.00</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="disc">* Correlation matrix based on daily factor returns. Low absolute correlation indicates orthogonality — a desirable property for portfolio diversification.</div>
-  </div>
-
-</div><!-- /tab-factors -->
-
   <!-- FOOTER (always visible) -->
   <div class="page-footer" style="border-top:2px solid var(--border3);padding:14px 0 0;background:transparent;margin-top:4px;">
-    <div class="pf-copy">© 2026 PACMANN ACADEMY · FACTOR INVESTING PLATFORM</div>
+    <div class="pf-copy">© 2026 PACMANN ACADEMY · FACTOR DATA PLATFORM</div>
     <div class="pf-disc">Ilustrasi dan data bersifat edukatif. Bukan rekomendasi investasi. Performa historis tidak menjamin hasil di masa depan.</div>
   </div>
 

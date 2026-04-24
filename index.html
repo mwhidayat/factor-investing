@@ -381,7 +381,6 @@ svg.ch{width:100%;overflow:visible;}
     <div class="sntab active" onclick="switchTab('overview',this)">OVERVIEW</div>
     <div class="sntab" onclick="switchTab('backtest',this)">BACKTEST</div>
     <div class="sntab" onclick="switchTab('weights',this)">WEIGHTS</div>
-    <div class="sntab" onclick="switchTab('factors',this)">CROSS-SECTIONAL FACTORS</div>
   </div>
 </div>
 
@@ -594,7 +593,6 @@ svg.ch{width:100%;overflow:visible;}
         <div class="ph"><span class="ph-ttl">PROPERTIES</span></div>
         <table class="props-t">
           <tbody>
-            <tr><td>Construction</td><td>Cross-sectional binning (quantiles) + inverse volatility weighting</td></tr>
             <tr><td>Universe</td><td><strong>Top 40 market cap</strong>, rolling, survivorship-bias free</td></tr>
             <tr><td>Rebalancing</td><td><strong>Daily</strong>, hourly updates at :05 past the hour (UTC)</td></tr>
             <tr><td>Out-of-sample</td><td>From <strong>2024-01-01</strong>; live-traded from 2025-01-01</td></tr>
@@ -612,16 +610,8 @@ svg.ch{width:100%;overflow:visible;}
     <div class="ph"><span class="ph-ttl">FREQUENTLY ASKED QUESTIONS</span></div>
     <div id="faq-list">
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">What is the construction methodology? How do I replicate it?</span><span class="faq-toggle">+</span></div>
-        <div class="faq-a"><p>The portfolio is constructed by applying cross-sectional binning — quantiles. This ensures weights are calculated in proportion to the strength of each factor. Assets are then weighted according to the inverse of their rolling volatility, to mitigate the impact of widely different volatilities of digital assets. We provide a replication notebook in the Resources section that will produce a very similar portfolio to what's shown.</p></div>
-      </div>
-      <div class="faq-item">
         <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Is the raw factor data available?</span><span class="faq-toggle">+</span></div>
         <div class="faq-a"><p>Yes, we serve the raw factor data via the portfolio/factors endpoint. Please see the API Docs for more information. Subscribers receive full access to factor scores, quantile assignments, and IC data for all assets in the universe.</p></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">What is smoothing? Why is it applied to some factors?</span><span class="faq-toggle">+</span></div>
-        <div class="faq-a"><p>Some cross-sectional factors have very high turnover and, despite being highly predictive, the alpha does not survive transaction costs. Smoothing (applying a simple moving average) is a way to reduce turnover and the impact of transaction costs. By default, Momentum40 runs with no smoothing applied.</p></div>
       </div>
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">What is the universe? Is it survivorship-bias free?</span><span class="faq-toggle">+</span></div>
